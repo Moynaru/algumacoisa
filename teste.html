@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+    }
+
+    .section {
+      width: 100%;
+      height: 100vh;
+      position: absolute;
+      top: 0;
+      left: 0;
+      display: none;
+      padding: 60px;
+      transition: opacity 0.5s ease;
+    }
+
+    .section.active {
+      display: block;
+      opacity: 1;
+    }
+
+    .section:nth-child(odd) {
+      background: #f0f0f0;
+    }
+
+    .section:nth-child(even) {
+      background: #dde8ff;
+    }
+
+    h1 {
+      font-size: 3em;
+      margin-bottom: 20px;
+    }
+
+    p {
+      font-size: 1.2em;
+      max-width: 700px;
+      line-height: 1.6;
+    }
+
+    .arrow {
+      position: fixed;
+      bottom: 30px;
+      font-size: 2.5em;
+      cursor: pointer;
+      color: #333;
+      z-index: 10;
+      user-select: none;
+    }
+
+    #next {
+      right: 30px;
+    }
+
+    #prev {
+      left: 30px;
+      display: none; 
+    }
+
+    .indicators {
+      position: fixed;
+      top: 50%;
+      left: 20px;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 10;
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      background-color: #bbb;
+      border-radius: 50%;
+      transition: background-color 0.3s;
+    }
+
+    .dot.active {
+      background-color: #007bff;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="indicators">
+    <span class="dot active"></span>
+    <span class="dot"></span>
+    <span class="dot"></span>
+  </div>
+
+  <div class="arrow" id="prev">&#8593;</div>
+  <div class="arrow" id="next">&#8595;</div>
+
+  <section class="section active">
+    <h1>Tópico 1</h1>
+    <p>Texto aperta enter pra mudar o topico e esc para voltar.</p>
+  </section>
+
+  <section class="section">
+    <h1>Tópico 2</h1>
+    <p>Texto.</p>
+  </section>
+
+  <section class="section">
+    <h1>Tópico 3</h1>
+    <p>Terceiro.</p>
+  </section>
+
+  <script>
+    const sections = document.querySelectorAll('.section');
+    const dots = document.querySelectorAll('.dot');
+    const nextBtn = document.getElementById('next');
+    const prevBtn = document.getElementById('prev');
+    let current = 0;
+
+    function updateControls() {
+      prevBtn.style.display = current === 0 ? 'none' : 'block';
+    }
+
+    function showSection(index) {
+      sections.forEach((sec, i) => {
+        sec.classList.toggle('active', i === index);
+        dots[i].classList.toggle('active', i === index);
+      });
+      updateControls();
+    }
+
+    function goToNext() {
+      if (current < sections.length - 1) {
+        current++;
+        showSection(current);
+      }
+    }
+
+    function goToPrev() {
+      if (current > 0) {
+        current--;
+        showSection(current);
+      }
+    }
+
+    nextBtn.addEventListener('click', goToNext);
+    prevBtn.addEventListener('click', goToPrev);
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        goToNext();
+      }
+    });
+
+        document.addEventListener('keyup', (e) => {
+      if (e.key === 'Escape') {
+        goToPrev();
+    }
+    });
+
+    updateControls();
+  </script>
+
+</body>
+</html>
